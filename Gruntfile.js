@@ -3,7 +3,7 @@ module.exports = function(grunt) {
 
   // Project configuration.
   grunt.initConfig({
-    pkg: '<json:package.json>',
+    pkg: grunt.file.readJSON('package.json'),
     meta: {
       banner: '// <%= pkg.title %> v<%= pkg.version %>\n' +
               '//\n' +
@@ -15,22 +15,12 @@ module.exports = function(grunt) {
     },
     rig: {
       browser: {
-        src: ['<banner:meta.banner>', '<file_strip_banner:src/<%= pkg.name %>.js>'],
+        src: ['<banner:meta.banner>', 'src/<%= pkg.name %>.js'],
         dest: 'dist/<%= pkg.name %>.js'
       },
       amd: {
-        src: ['<banner:meta.banner>', '<file_strip_banner:src/<%= pkg.name %>-amd.js>'],
+        src: ['<banner:meta.banner>', 'src/<%= pkg.name %>-amd.js'],
         dest: 'dist/<%= pkg.name %>-amd.js'
-      }
-    },
-    min: {
-      browser: {
-        src: ['<banner:meta.banner>', '<config:rig.browser.dest>'],
-        dest: 'dist/<%= pkg.name %>-min.js'
-      },
-      amd: {
-        src: ['<banner:meta.banner>', '<config:rig.amd.dest>'],
-        dest: 'dist/<%= pkg.name %>-amd-min.js'
       }
     },
     watch: {
@@ -47,10 +37,8 @@ module.exports = function(grunt) {
         'port': '1111'
       }
     },
-    lint: {
-      files: ['grunt.js', 'src/**/*.js', 'tests/**/*.js']
-    },
     jshint: {
+      files: ['Gruntfile.js', 'src/**/*.js', 'tests/**/*.js'],
       options: {
         curly: true,
         eqeqeq: true,
@@ -63,20 +51,29 @@ module.exports = function(grunt) {
         boss: true,
         eqnull: true,
         browser: true,
-        node: true
-      },
-      globals: {
-        Backbone: true,
-        _: true,
-        jQuery: true,
-        $: true,
-        buster: true,
-        assert: true,
-        refute: true,
-        define: true
+        node: true,
+        globals: {
+          Backbone: true,
+          _: true,
+          jQuery: true,
+          $: true,
+          buster: true,
+          assert: true,
+          refute: true,
+          define: true
+        }
       }
     },
-    uglify: {},
+    uglify: {
+      browser: {
+        src: ['<banner:meta.banner>', '<config:rig.browser.dest>'],
+        dest: 'dist/<%= pkg.name %>-min.js'
+      },
+      amd: {
+        src: ['<banner:meta.banner>', '<config:rig.amd.dest>'],
+        dest: 'dist/<%= pkg.name %>-amd-min.js'
+      }
+    },
     docco: {
       app: {
         src: ['dist/backbone-validation.js'],
@@ -128,11 +125,13 @@ module.exports = function(grunt) {
     }
   });
 
-  grunt.registerTask('default', 'rig lint buster min');
-  grunt.registerTask('publish', 'docco shell');
+  grunt.registerTask('default', ['rig', 'jshint', 'buster', 'uglify']);
+  grunt.registerTask('publish', ['docco', 'shell']);
 
   grunt.loadNpmTasks('grunt-buster');
   grunt.loadNpmTasks('grunt-docco');
   grunt.loadNpmTasks('grunt-shell');
   grunt.loadNpmTasks('grunt-rigger');
+  grunt.loadNpmTasks('grunt-contrib-jshint');
+  grunt.loadNpmTasks('grunt-contrib-uglify');
 };

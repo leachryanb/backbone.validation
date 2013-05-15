@@ -1,10 +1,3 @@
-// Backbone.Validation v0.7.1
-//
-// Copyright (c) 2011-2012 Thomas Pedersen
-// Distributed under MIT License
-//
-// Documentation and full license available at:
-// http://thedersen.com/projects/backbone-validation
 (function (factory) {
   if (typeof exports === 'object') {
     module.exports = factory(require('backbone'), require('underscore'));
@@ -71,7 +64,12 @@
   
       _.each(obj, function(val, key) {
         if(obj.hasOwnProperty(key)) {
-          if (val && typeof val === 'object' && !(val instanceof Date || val instanceof RegExp)) {
+          if (val && typeof val === 'object' && !(
+            val instanceof Date ||
+            val instanceof RegExp ||
+            val instanceof Backbone.Model ||
+            val instanceof Backbone.Collection)
+          ) {
             flatten(val, into, prefix + key + '.');
           }
           else {
@@ -605,6 +603,5 @@
   
     return Validation;
   }(_));
-  
   return Backbone.Validation;
 }));
