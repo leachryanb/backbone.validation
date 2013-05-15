@@ -14,14 +14,14 @@
     }
   ],
   "bugs": {
-    "url": "http://github.com/thedersen/backbone.validation/issues"
+    "url": "http://github.com/leachryanb/backbone.validation/issues"
   },
   "directories": {
     "lib": "./dist"
   },
   "repository": {
     "type": "git",
-    "url": "http://github.com/thedersen/backbone.validation.git"
+    "url": "http://github.com/leachryanb/backbone.validation.git"
   },
   "scripts": {
     "test": "grunt buster",
