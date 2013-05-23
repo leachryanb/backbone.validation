@@ -67,6 +67,7 @@
           if (val && typeof val === 'object' && !(
             val instanceof Date ||
             val instanceof RegExp ||
+			val instanceof Array ||
             val instanceof Backbone.Model ||
             val instanceof Backbone.Collection)
           ) {
